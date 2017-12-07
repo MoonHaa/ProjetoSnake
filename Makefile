@@ -49,3 +49,4 @@ clean:
 	@echo " $(RM) -rf $(BUILDDIR) $(BINDIR)"; $(RM) -rf $(BUILDDIR) $(BINDIR)
 
 .PHONY: clean test snake
+

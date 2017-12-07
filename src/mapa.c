@@ -78,7 +78,7 @@ int mapa_limpo(MAPA map)
 	int i, j;
 	for (i = 1; (i < (MAX_Y - 1)) && check; i++)
 		for (j = 1; (j < (MAX_X - 1)) && check; j++)
-			if (map[i][j] != VAZIA)
+			if ((map[i][j] != VAZIA) && (map[i][j] != SPECIAL))
 				check = 0;
 	return !check;
 }
