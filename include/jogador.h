@@ -12,10 +12,10 @@ typedef struct player {
 JOGADOR* cria_jogador(char nome[50]);
 
 //atualiza o score do jogador
-void inline update_score(JOGADOR* player, int valor);
+extern void update_score(JOGADOR* player, int valor);
 
 //atualiza o recorde (maior score) do jogador
-void inline update_recorde(JOGADOR* player);
+extern void update_recorde(JOGADOR* player);
 
 //deleta um jogador
 void free_jogador(JOGADOR* player);

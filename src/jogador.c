@@ -13,13 +13,13 @@ JOGADOR * cria_jogador(char nome[50])
 }
 
 //atualiza o score do jogador de acordo com o valor passado nos parametros
-void update_score(JOGADOR * player, int valor)
+inline void update_score(JOGADOR * player, int valor)
 {
 	player->score += valor;
 }
 
 //atualiza o recorde do jogador se o score atual for maior q o recorde atual
-void update_recorde(JOGADOR * player)
+inline void update_recorde(JOGADOR * player)
 {
 	if (player->score > player->recorde)
 		player->recorde = player->score;
