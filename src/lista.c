@@ -30,7 +30,7 @@ NO * push_back(NO * cabeca, int x, int y)
 	NO* novo = (NO*)malloc(sizeof(NO));
 	novo->x = x;
 	novo->y = y;
-	
+
 	NO* fim_da_lista = fim(cabeca);
 	novo->anterior = fim_da_lista;
 	fim_da_lista->proximo = novo;
@@ -72,7 +72,7 @@ NO * free_lista(NO * cabeca)
 	}
 
 	free(ponteiro);
-	
+
 	return NULL;
 }
 

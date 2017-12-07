@@ -37,7 +37,7 @@ MAPA gera_mapa(void)
 void inicializa_bonus(MAPA map)
 {
 	int quant_casas = (MAX_Y - 2)*(MAX_X - 2);
-	
+
 	inicializa_bonus_helper(map, COMIDA, quant_casas * 0.16);
 
 	inicializa_bonus_helper(map, DUPLA, quant_casas * 0.08);
