@@ -15,7 +15,7 @@ JOGADOR* cria_jogador(char nome[50]);
 extern void update_score(JOGADOR* player, int valor);
 
 //atualiza o recorde (maior score) do jogador
-extern void update_recorde(JOGADOR* player);
+extern void update_player_recorde(JOGADOR* player);
 
 //deleta um jogador
 void free_jogador(JOGADOR* player);

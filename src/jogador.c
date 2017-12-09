@@ -19,7 +19,7 @@ inline void update_score(JOGADOR * player, int valor)
 }
 
 //atualiza o recorde do jogador se o score atual for maior q o recorde atual
-inline void update_recorde(JOGADOR * player)
+inline void update_player_recorde(JOGADOR * player)
 {
 	if (player->score > player->recorde)
 		player->recorde = player->score;
