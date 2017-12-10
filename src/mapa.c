@@ -38,17 +38,17 @@ void inicializa_bonus(MAPA map)
 {
 	int quant_casas = (MAX_Y - 2)*(MAX_X - 2);
 
-	inicializa_bonus_helper(map, COMIDA, quant_casas * 0.16);
+	inicializa_bonus_helper(map, COMIDA, quant_casas * 0.01);
 
-	inicializa_bonus_helper(map, DUPLA, quant_casas * 0.08);
+	inicializa_bonus_helper(map, DUPLA, quant_casas * 0.005);
 
-	inicializa_bonus_helper(map, TRIPLA, quant_casas * 0.04);
+	inicializa_bonus_helper(map, TRIPLA, quant_casas * 0.0025);
 
-	inicializa_bonus_helper(map, BONUS, quant_casas * 0.02);
+	inicializa_bonus_helper(map, BONUS, quant_casas * 0.00125);
 
-	inicializa_bonus_helper(map, BONUS_DUPLO, quant_casas * 0.01);
+	inicializa_bonus_helper(map, BONUS_DUPLO, quant_casas * 0.000625);
 
-	inicializa_bonus_helper(map, SPECIAL, quant_casas * 0.005);
+	inicializa_bonus_helper(map, SPECIAL, quant_casas * 0.0003125);
 
 	return;
 }
@@ -78,9 +78,9 @@ int mapa_limpo(MAPA map)
 	int i, j;
 	for (i = 1; (i < (MAX_Y - 1)) && check; i++)
 		for (j = 1; (j < (MAX_X - 1)) && check; j++)
-			if ((map[i][j] != VAZIA) && (map[i][j] != SPECIAL))
+			if ((map[i][j] != VAZIA) && (map[i][j] != SPECIAL) && (map[i][j] != PAREDE))
 				check = 0;
-	return !check;
+	return check;
 }
 
 //limpa o bonus de uma casa, sinalizando que a cobra o comeu

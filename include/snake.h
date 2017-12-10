@@ -4,7 +4,7 @@
 #include "lista.h"
 
 //define o tamanho de inicialização da cobra
-#define INIT 3
+#define INIT 15
 
 //define o tipo cobra
 typedef struct cobra {
@@ -23,5 +23,8 @@ COBRA* inicializa(int x, int y);
 
 //destroi a cobra
 void kill_cobra(COBRA* snake);
+
+//verifica se a posicao pertence a cobra, desconsiderando a ultima posicao
+int posicao_pertencente(COBRA* snake, int x, int y);
 
 #endif //SNAKE_H_

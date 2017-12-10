@@ -2,12 +2,12 @@
 #define MAPA_H_
 
 //define os tamanhos maximos do mapa
-#define MAX_X 21
-#define MAX_Y 21
+#define MAX_X 121
+#define MAX_Y 30
 
 //define os possiveis valores para o tabuleiro
 typedef enum { VAZIA = 0, COMIDA = 1, DUPLA = 2, TRIPLA = 3, BONUS = 10, BONUS_DUPLO = 100, SPECIAL = -500, PAREDE = 999 } CASA;
-//				68,5%		16%			8%			4%			2%			1%				0,5%
+//							1%			0,5%		0,25%		0,125%		0,0625%			0,03125%
 //define o tipo mapa
 #define MAPA CASA**
 

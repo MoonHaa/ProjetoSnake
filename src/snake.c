@@ -33,7 +33,7 @@ COBRA* inicializa(int x, int y)
 	snake->tamanho = INIT;
 	snake->cabeca = cria_lista(x, y);
 	int cont;
-	for (cont = 1; cont < INIT; cont++)
+	for (cont = 1; cont <= INIT; cont++)
 		snake->cabeca = push_back(snake->cabeca, x - cont, y);
 	return snake;
 }
@@ -46,4 +46,19 @@ void kill_cobra(COBRA * snake)
 	free(snake);
 	snake = NULL;
 	return;
+}
+
+//verifica se a posicao pertence a cobra, desconsiderando a ultima posicao
+int posicao_pertencente(COBRA* snake, int x, int y)
+{
+	NO* ptr = snake->cabeca;
+	NO* cauda = fim(ptr);
+	while (ptr->proximo != cauda)
+	{
+		if ((ptr->x == x) && (ptr->y == y))
+			return 1;
+
+		ptr = ptr->proximo;
+	}
+	return 0;
 }
