@@ -16,6 +16,8 @@ void exibe_menu_principal(WINDOW *janela, int destaque, char* escolhas[], int nu
 //inicia o jogo
 void inicia_jogo(RECORDE* arquivo_recordes);
 
+//janela pós jogo
+int janela_pos_jogo(int max_y, int max_x, int y, int x, JOGADOR* player);
 
 
 #endif //JOGO_H_

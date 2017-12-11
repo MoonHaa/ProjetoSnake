@@ -1,7 +1,6 @@
 //#include "..\include\jogo.h"
 #include "jogo.h"
 
-
 //cria uma janela iniciando em y/x com dimensoes comp_y/comp_x
 WINDOW* cria_janela(int comp_y, int comp_x, int y, int x)
 {
@@ -236,37 +235,7 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 		//salva o recorde do usuario
 		update_player_recorde(player);
 		//subjanela de derrota/sair
-		WINDOW* janela_eof = cria_janela(max_y - 10, max_x - 20, 5, 10);
-		//sair do modo halfdelay
-		nocbreak();
-		//entrar no modo de captura continua sem timeout
-		cbreak();
-		while (1)
-		{
-			//limpa a tela
-			//wclear(janela_eof);
-			//desenha borda
-			box(janela_eof, 0, 0);
-			//mensagem de fim de jogo
-			mvwprintw(janela_eof, 2, 2, "Score final: %i\t Recorde: %i", player->score, player->recorde);
-			mvwprintw(janela_eof, 3, 2, "Seu recorde será salvo automaticamente ao sair do programa");
-			mvwprintw(janela_eof, 4, 2, "Aperte Enter para tentar novamente ou Backspace para voltar ao menu principal");
-			//atualiza a janela
-			wrefresh(janela_eof);
-			//captura input do usuario
-			int key = wgetch(janela_eof);
-			//usuario sinalizou saida do programa
-			if (key == KEY_BACKSPACE)
-			{
-				menu = 0;
-				break;
-			}
-			//usuario sinalizou reinicio do jogo
-			if (key == 10)
-				break;
-		}
-		//fechar subjanela de derrota
-		delwin(janela_eof);
+		menu = janela_pos_jogo(max_y, max_x, 5, 10, player);
 	}
 	//atualiza os recordes salvos
 	update_recordes(arquivo_recordes, player);
@@ -274,4 +243,45 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 	free_jogador(player);
 	//fecha a janela principal
 	delwin(background);
+}
+
+//gera a janela de pós jogo
+int janela_pos_jogo(int max_y, int max_x, int y, int x, JOGADOR* player)
+{
+	//flag de retorno para informar se o usuario escolheu sair ou reiniciar o jogo
+	int retorno = 1;
+	//subjanela de derrota/sair
+	WINDOW* janela_eof = cria_janela(max_y - 2*y, max_x - 2*x, y, x);
+	//sair do modo halfdelay
+	nocbreak();
+	//entrar no modo de captura continua sem timeout
+	cbreak();
+	while (1)
+	{
+		//limpa a tela
+		wclear(janela_eof);
+		//desenha borda
+		box(janela_eof, 0, 0);
+		//mensagem de fim de jogo
+		mvwprintw(janela_eof, 2, 2, "Score final: %i\t Recorde: %i", player->score, player->recorde);
+		mvwprintw(janela_eof, 3, 2, "Seu recorde será salvo automaticamente ao sair do programa");
+		mvwprintw(janela_eof, 4, 2, "Aperte Enter para tentar novamente ou Backspace para voltar ao menu principal");
+		//atualiza a janela
+		wrefresh(janela_eof);
+		//captura input do usuario
+		int key = wgetch(janela_eof);
+		//usuario sinalizou saida do programa
+		if (key == KEY_BACKSPACE)
+		{
+			retorno = 0;
+			break;
+		}
+		//usuario sinalizou reinicio do jogo
+		if (key == 10)
+			break;
+	}
+	//fechar subjanela de derrota
+	delwin(janela_eof);
+	//retorna a saida do programa
+	return retorno;
 }

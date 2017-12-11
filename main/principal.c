@@ -43,7 +43,7 @@ int main(void)
 	{
 		getmaxyx(stdscr, max_y, max_x); //tamanho maximo da tela
 
-										//mostra menu principal
+		//mostra menu principal
 		{
 			menu_principal = cria_janela(max_y - 10, max_x - 20, 5, 10); //cria a janela de menu principal
 
@@ -160,7 +160,7 @@ int main(void)
 		if (escolha == 3)
 			break;	//encerra o loop infinito
 
-					//background dinamico, seria ideal por numa função a parte, senão desse tanto problema pra fazer
+		//background dinamico, seria ideal por numa função a parte, senão desse tanto problema pra fazer
 		{
 			head_x_n = head_x + increment_x; //analisa a proxima posição do objeto
 			head_y_n = head_y + increment_y; //analisa a proxima posição do objeto
