@@ -38,7 +38,7 @@ void exibe_menu_principal(WINDOW *janela, int destaque, char* escolhas[], int nu
 //inicia o jogo
 void inicia_jogo(RECORDE* arquivo_recordes)
 {
-	int max_y, max_x;
+	int max_y, max_x, menu = 1;
 	JOGADOR* player = NULL;
 	char string[50];
 
@@ -71,7 +71,7 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 	//fecha submenu
 	delwin(menu_jogador);
 	
-	while (1)
+	while (menu)
 	{
 		//cria subjanela para exibir os dados do usuario
 		WINDOW* janela_player = cria_janela(max_y - 10, max_x - 20, 5, 10);
@@ -86,12 +86,16 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 		int increment_x = 1, increment_y = 0;
 		int flag = 1;
 
+		//zera o placar do jogador
+		player->score = 0;
+
 		MAPA mapa = gera_mapa();
 
 		COBRA* cobra = inicializa(head_x, head_y);
 		//loop do jogo
 		while (flag)
 		{
+
 			mvwprintw(janela_player, 1, 2, "Nome: %s Recorde: %i Score: %i", player->nome, player->recorde, player->score); //exibe dados do jogador
 			box(janela_player, 0, 0); //desenha as bordas
 			wrefresh(janela_player); //atualiza a janela
@@ -154,20 +158,32 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 			switch (tecla)
 			{
 			case KEY_UP:
-				increment_x = 0;
-				increment_y = -1;
+				if (increment_y != 1)
+				{
+					increment_x = 0;
+					increment_y = -1;
+				}
 				break;
 			case KEY_DOWN:
-				increment_x = 0;
-				increment_y = 1;
+				if (increment_y != -1)
+				{
+					increment_x = 0;
+					increment_y = 1;
+				}
 				break;
 			case KEY_LEFT:
-				increment_x = -1;
-				increment_y = 0;
+				if (increment_x != 1)
+				{
+					increment_x = -1;
+					increment_y = 0;
+				}
 				break;
 			case KEY_RIGHT:
-				increment_x = 1;
-				increment_y = 0;
+				if (increment_x != -1)
+				{
+					increment_x = 1;
+					increment_y = 0;
+				}
 				break;
 			default:
 				break;
@@ -225,21 +241,32 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 		nocbreak();
 		//entrar no modo de captura continua sem timeout
 		cbreak();
-		//desenha borda
-		box(janela_eof, 0, 0);
-		//mensagem de fim de jogo
-		mvwprintw(janela_eof, 2, 2, "Score final: %i\t Recorde: %i", player->score, player->recorde);
-		mvwprintw(janela_eof, 3, 2, "Seu recorde será salvo automaticamente ao sair do programa");
-		mvwprintw(janela_eof, 4, 2, "Aperte Enter para tentar novamente ou Backspace para voltar ao menu principal");
-		//atualiza a janela
-		wrefresh(janela_eof);
-		//captura input do usuario
-		int key = wgetch(janela_eof);
+		while (1)
+		{
+			//limpa a tela
+			//wclear(janela_eof);
+			//desenha borda
+			box(janela_eof, 0, 0);
+			//mensagem de fim de jogo
+			mvwprintw(janela_eof, 2, 2, "Score final: %i\t Recorde: %i", player->score, player->recorde);
+			mvwprintw(janela_eof, 3, 2, "Seu recorde será salvo automaticamente ao sair do programa");
+			mvwprintw(janela_eof, 4, 2, "Aperte Enter para tentar novamente ou Backspace para voltar ao menu principal");
+			//atualiza a janela
+			wrefresh(janela_eof);
+			//captura input do usuario
+			int key = wgetch(janela_eof);
+			//usuario sinalizou saida do programa
+			if (key == KEY_BACKSPACE)
+			{
+				menu = 0;
+				break;
+			}
+			//usuario sinalizou reinicio do jogo
+			if (key == 10)
+				break;
+		}
 		//fechar subjanela de derrota
 		delwin(janela_eof);
-		//usuario sinalizou saida do programa
-		if (key == KEY_BACKSPACE)
-			break;
 	}
 	//atualiza os recordes salvos
 	update_recordes(arquivo_recordes, player);
