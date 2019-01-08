@@ -87,19 +87,26 @@ int main(void)
 		//mostra recordes
 		if (escolha == 2)
 		{
+			int subj_max_x = max_x-2, subj_max_y = max_y-7, init = 0, end, flag = 1; //evitar usar max_x e max_y pois são variaveis globais
+												 //que atualizam em tempo real o tamanho de toda a console
+												 //onde o jogo está sendo executado
 			menu_recordes = cria_janela(max_y, max_x, 0, 0); //cria janela dos recordes
 
 			wclear(menu_recordes); //limpa a tela
 
 			box(menu_recordes, 0, 0); //desenha as bordas
 
-			mvwprintw(menu_recordes, 1, 1, "Ranking\tScore\t\tNome\t\tPressione Enter para sair");
-
+			mvwprintw(menu_recordes, 1, 1, " Ranking\t Score\t\t Nome\t\t Pressione Enter para sair"); //os espaços depois dos tabs
+														   //são necessários devido a subjanela
+														   //iniciar 1 posição extra a direita
 			wrefresh(menu_recordes);
 
-			WINDOW* subjanela = cria_janela(22, max_x, 4, 0); //cria subjanela
+			WINDOW* subjanela = cria_janela(subj_max_y, subj_max_x, 4, 1); //cria subjanela
 
-			int init = 0, end = 20, flag = 1;
+			getmaxyx(subjanela, subj_max_y, subj_max_x); //encontra tamanho da janela de recordes
+								     //usada pra corrigir o tamanho da lista a ser exibida
+
+			end = subj_max_y-2;
 
 			while (flag)
 			{
@@ -121,7 +128,7 @@ int main(void)
 				case KEY_UP: //avan�a lista para cima
 					if (init <= 0)
 					{
-						init = MAX_RECORD - 20;
+						init = MAX_RECORD - subj_max_y+2;
 						end = MAX_RECORD;
 					}
 					else
@@ -134,7 +141,7 @@ int main(void)
 					if (end >= MAX_RECORD)
 					{
 						init = 0;
-						end = 20;
+						end = subj_max_y-2;
 					}
 					else
 					{
