@@ -55,7 +55,7 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 	//habilita echo
 	echo();
 	//pergunta nome do usuario
-	mvwprintw(menu_jogador, 2, 2, "Por favor, digite seu nome:\n  ");
+	mvwprintw(menu_jogador, 1, 2, "Por favor, digite seu nome:\n  ");
 	//desenha bordas
 	box(menu_jogador, 0, 0);
 	//atualiza a tela
@@ -72,15 +72,15 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 	while (menu)
 	{
 		//cria subjanela para exibir os dados do usuario
-		WINDOW* janela_player = cria_janela(max_y - 10, max_x - 20, 5, 10);
+		WINDOW* janela_player = cria_janela(max_y - 4, max_x - 2, 3, 1);
 		//cria subjanela para o mapa
-		WINDOW* janela_mapa = cria_janela(max_y-14, max_x-22, 8, 11);
+		WINDOW* janela_mapa = cria_janela(max_y - 8, max_x - 4, 6, 2);
 		//forca atualizacao da tela apos certo tempo, mesmo sem input do usuario
 		halfdelay(3);
 
 		//inicializacao do jogo
-		int game_max_y = max_y-14;
-		int game_max_x = max_x-22;
+		int game_max_y = max_y - 8;
+		int game_max_x = max_x - 4;
 		int head_x = (game_max_x / 2);
 		int head_y = (game_max_y / 2);
 		int increment_x = 1, increment_y = 0;
@@ -236,7 +236,7 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 		//salva o recorde do usuario
 		update_player_recorde(player);
 		//subjanela de derrota/sair
-		menu = janela_pos_jogo(max_y, max_x, 5, 10, player);
+		menu = janela_pos_jogo(max_y + 4, max_x, 6, 2, player); //valores corrigidos para cobrir somente o mapa
 	}
 	//atualiza os recordes salvos
 	update_recordes(arquivo_recordes, player);
@@ -265,7 +265,7 @@ int janela_pos_jogo(int max_y, int max_x, int y, int x, JOGADOR* player)
 		box(janela_eof, 0, 0);
 		//mensagem de fim de jogo
 		mvwprintw(janela_eof, 2, 2, "Score final: %i\t Recorde: %i", player->score, player->recorde);
-		mvwprintw(janela_eof, 3, 2, "Seu recorde ser� salvo automaticamente ao sair do programa");
+		mvwprintw(janela_eof, 3, 2, "Seu recorde sera salvo automaticamente ao sair do programa");
 		mvwprintw(janela_eof, 4, 2, "Aperte Enter para tentar novamente ou Backspace para voltar ao menu principal");
 		//atualiza a janela
 		wrefresh(janela_eof);
