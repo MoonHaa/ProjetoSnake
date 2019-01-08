@@ -1,4 +1,3 @@
-//#include "..\include\jogo.h"
 #include "jogo.h"
 
 //cria uma janela iniciando em y/x com dimensoes comp_y/comp_x
@@ -21,7 +20,7 @@ void exibe_menu_principal(WINDOW *janela, int destaque, char* escolhas[], int nu
 	box(janela, 0, 0);
 	for (int i = 0; i < num_escolhas; ++i)
 	{
-		if (destaque == i + 1) //destaca a opção
+		if (destaque == i + 1) //destaca a opï¿½ï¿½o
 		{
 			wattron(janela, A_REVERSE);
 			mvwprintw(janela, y, x, "%s", escolhas[i]);
@@ -75,20 +74,22 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 		//cria subjanela para exibir os dados do usuario
 		WINDOW* janela_player = cria_janela(max_y - 10, max_x - 20, 5, 10);
 		//cria subjanela para o mapa
-		WINDOW* janela_mapa = cria_janela(MAX_Y, MAX_X, 8, 11);
+		WINDOW* janela_mapa = cria_janela(max_y-14, max_x-22, 8, 11);
 		//forca atualizacao da tela apos certo tempo, mesmo sem input do usuario
 		halfdelay(3);
 
 		//inicializacao do jogo
-		int head_x = (MAX_X / 2) + 11;
-		int head_y = (MAX_Y / 2) + 8;
+		int game_max_y = max_y-14;
+		int game_max_x = max_x-22;
+		int head_x = (game_max_x / 2);
+		int head_y = (game_max_y / 2);
 		int increment_x = 1, increment_y = 0;
 		int flag = 1;
 
 		//zera o placar do jogador
 		player->score = 0;
 
-		MAPA mapa = gera_mapa();
+		MAPA mapa = gera_mapa(game_max_y,game_max_x);
 
 		COBRA* cobra = inicializa(head_x, head_y);
 		//loop do jogo
@@ -101,13 +102,13 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 
 			box(janela_mapa, 0, 0); //desenha as bordas
 
-			if (mapa_limpo(mapa)) //verifica se o mapa está limpo, caso verdade, inicializa mais bonus no mapa novamente
-				inicializa_bonus(mapa);
+			if (mapa_limpo(mapa, game_max_y, game_max_x)) //verifica se o mapa estï¿½ limpo, caso verdade, inicializa mais bonus no mapa novamente
+				inicializa_bonus(mapa, game_max_y, game_max_x);
 
 			//desenha o mapa na tela
-			for (int i = 0; i < MAX_Y; i++)
+			for (int i = 0; i < game_max_y; i++)
 			{
-				for (int j = 0; j < MAX_X; j++)
+				for (int j = 0; j < game_max_x; j++)
 				{
 					CASA posicao = mapa[i][j];
 
@@ -141,7 +142,7 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 			}
 
 			//desenha a cobra na tela
-			NO* no_cobra = cobra->cabeca; //recebe a cabeça do enfeite
+			NO* no_cobra = cobra->cabeca; //recebe a cabeï¿½a do enfeite
 
 			while (no_cobra->proximo != NULL) //enquanto tiver nos
 			{
@@ -188,7 +189,7 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 				break;
 			}
 
-			//analisa a proxima posicao da cabeça da cobra
+			//analisa a proxima posicao da cabeï¿½a da cobra
 			head_x += increment_x;
 			head_y += increment_y;
 
@@ -245,7 +246,7 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 	delwin(background);
 }
 
-//gera a janela de pós jogo
+//gera a janela de pï¿½s jogo
 int janela_pos_jogo(int max_y, int max_x, int y, int x, JOGADOR* player)
 {
 	//flag de retorno para informar se o usuario escolheu sair ou reiniciar o jogo
@@ -264,7 +265,7 @@ int janela_pos_jogo(int max_y, int max_x, int y, int x, JOGADOR* player)
 		box(janela_eof, 0, 0);
 		//mensagem de fim de jogo
 		mvwprintw(janela_eof, 2, 2, "Score final: %i\t Recorde: %i", player->score, player->recorde);
-		mvwprintw(janela_eof, 3, 2, "Seu recorde será salvo automaticamente ao sair do programa");
+		mvwprintw(janela_eof, 3, 2, "Seu recorde serï¿½ salvo automaticamente ao sair do programa");
 		mvwprintw(janela_eof, 4, 2, "Aperte Enter para tentar novamente ou Backspace para voltar ao menu principal");
 		//atualiza a janela
 		wrefresh(janela_eof);

@@ -1,7 +1,7 @@
 #define compilador principal
 CC := gcc
 
-#seta diretorios, extensoes de arquivos e flags de compilação
+#seta diretorios, extensoes de arquivos e flags de compilaï¿½ï¿½o
 SRCDIR := src
 BUILDDIR := build
 BINDIR := bin
