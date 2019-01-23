@@ -1,5 +1,6 @@
 #include "jogo.h"
 
+
 //cria uma janela iniciando em y/x com dimensoes comp_y/comp_x
 WINDOW* cria_janela(int comp_y, int comp_x, int y, int x)
 {
@@ -76,8 +77,14 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 		//cria subjanela para o mapa
 		WINDOW* janela_mapa = cria_janela(max_y - 8, max_x - 4, 6, 2);
 		//forca atualizacao da tela apos certo tempo, mesmo sem input do usuario
-		halfdelay(3);
-
+		//caso haja input do usuario, não há delay na execução do programa
+		//caso não haja input do usuario, o programa irá parar por parametro vs 1/10 de segundo
+		//isso permite que o jogo possuo atualizações não uniformes, mas garante que o input do usuario será sempre executado
+		//halfdelay(3);
+		
+		//força o input do usuario ser reconhecido imediatamente pelo programa, desabilita buffer de input
+		cbreak();
+		
 		//inicializacao do jogo
 		int game_max_y = max_y - 8;
 		int game_max_x = max_x - 4;
@@ -85,6 +92,12 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 		int head_y = (game_max_y / 2);
 		int increment_x = 1, increment_y = 0;
 		int flag = 1;
+
+		//delay do loop em us, determina a velocidade de execução do jogo, força o loop a ter um tempo constante de execução
+		long delay = 250000; //pode ocorrer do tempo total do loop ser superior ao tempo do delay
+
+		//struct utilizada para contar a passagem do tempo
+		struct timespec start;
 
 		//zera o placar do jogador
 		player->score = 0;
@@ -95,6 +108,7 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 		//loop do jogo
 		while (flag)
 		{
+			clock_gettime(CLOCK_MONOTONIC,&start);
 
 			mvwprintw(janela_player, 1, 2, "Nome: %s Recorde: %i Score: %i", player->nome, player->recorde, player->score); //exibe dados do jogador
 			box(janela_player, 0, 0); //desenha as bordas
@@ -152,6 +166,9 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 				//move para o proximo no
 				no_cobra = no_cobra->proximo;
 			}
+
+			//força o programa a não esperar pelo wgetch caso não tenha input disponivel
+			nodelay(janela_mapa,TRUE);
 
 			//captura o teclado
 			int tecla = wgetch(janela_mapa);
@@ -212,6 +229,9 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 				comer(cobra, head_x, head_y);
 				update_score(player, mapa[head_y][head_x]);
 				limpa_casa(mapa, head_x, head_y);
+				delay-=250;
+				if (delay < 0) //garante que o delay não seja negativo
+					delay = 0;
 				break;
 			case SPECIAL: //achou o special
 				andar(cobra, head_x, head_y);
@@ -223,6 +243,25 @@ void inicia_jogo(RECORDE* arquivo_recordes)
 			}
 
 			wrefresh(janela_mapa); //atualiza a janela
+
+			//faz o loop ter tempo constante
+			loopdelay(start,delay);
+
+			//força o programa a não esperar pelo wgetch caso não tenha input disponivel
+			nodelay(janela_mapa,TRUE);
+			
+			//antes de dar flush no buffer, salva até 3 inputs
+			int tecla1 = wgetch(janela_mapa),
+				tecla2 = wgetch(janela_mapa),
+				tecla3 = wgetch(janela_mapa);
+
+			//dá flush do input
+			flushinp();
+
+			//reintroduz os inputs no buffer
+			ungetch(tecla1);
+			ungetch(tecla2);
+			ungetch(tecla3);
 		}
 		
 		//deleta cobra
@@ -285,4 +324,29 @@ int janela_pos_jogo(int max_y, int max_x, int y, int x, JOGADOR* player)
 	delwin(janela_eof);
 	//retorna a saida do programa
 	return retorno;
+}
+
+//executa o delay no final do loop do jogo
+void loopdelay(struct timespec start, long delay)
+{
+	struct timespec sleep_time, stop;
+
+	//contabiliza o tempo o mais tarde possivel, considera o tempo gasto total incluindo a chamada dessa função
+	clock_gettime(CLOCK_MONOTONIC,&stop);
+
+	//caso o loop seja mais lento que o delay apenas sai da função sem fazer nada
+	if ( ( (stop.tv_sec * 1000000000 + stop.tv_nsec) - (start.tv_sec * 1000000000 + start.tv_nsec) ) > (delay * 1000) )
+		return;
+
+	//recontabiliza o tempo gasto na operação acima
+	clock_gettime(CLOCK_MONOTONIC,&stop);
+	
+	//contabiliza o tempo faltante
+	long nsec = (delay * 1000) - ((stop.tv_sec * 1000000000 + stop.tv_nsec) - (start.tv_sec * 1000000000 + start.tv_nsec));
+	sleep_time.tv_sec = (__time_t)(nsec / 1000000000);
+	sleep_time.tv_nsec = (long)(nsec % 1000000000);
+	
+	//adormece pelo tempo faltante
+	while( nanosleep(&sleep_time,&sleep_time) == -1 )
+		continue;
 }
